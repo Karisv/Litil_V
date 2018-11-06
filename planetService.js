@@ -15,7 +15,7 @@ class PlanetService extends EventEmitter {
 
     getAllPlanets() {
         Planet.find({}, (err, planets) => {
-            if (!planets) { this.emit('error', { statusCode: 404, message: 'Not found' }); }
+            if (planets.length === 0) { this.emit('error', { statusCode: 404, message: 'No planets in the database' }); }
             else if (err) { this.emit('error', { statusCode: 500, message: err }); }
             else { this.emit(this.events.GET_ALL_PLANETS, planets); }
         });
@@ -23,8 +23,7 @@ class PlanetService extends EventEmitter {
 
     getCoordinatesByPlanetId(id) {
         Coordinate.find({ planetId: id }, (err, data) => {
-            console.log(id);
-            if (!data) { this.emit('error', { statusCode: 404, message: 'Not found' }); }
+            if (data.length === 0) { this.emit('error', { statusCode: 404, message: 'This planet does not have any coordinates' }); }
             else if (err) { this.emit('error', { statusCode: 500, message: err }); }
             else { this.emit(this.events.GET_ALL_PLANTES_ID, data); }
         })
@@ -32,8 +31,8 @@ class PlanetService extends EventEmitter {
 
     addCoordinates(id, body) {
         Coordinate.find({ planetId: id }, (err, coordinates) => {
-            if (!coordinates) {
-                this.emit('error', { statusCode: 400, message: 'Planet doesn' })
+            if (coordinates.length === 0) {
+                this.emit('error', { statusCode: 404, message: 'Planet does not exist' })
             } else if (err) { this.emit('error', { statusCode: 500, message: err }); }
             else {
                 let input = {
