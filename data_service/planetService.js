@@ -1,4 +1,6 @@
-const { Planet } = require('../data/DEV')
+const { Planet } = require('../data/db.js')
+const { Coordinate } = require('../data/db.js')
+
 
 
 const PlanetService = () => {
@@ -24,10 +26,31 @@ const PlanetService = () => {
             })
         })              
     }
+    const getCoordinatesByPlanetId = (id) => {
+
+                return new Promise((resolve, reject) => {
+        
+                    Coordinate.find({ "id": id }, (err, coordinates) => {
+        
+                        if(err) {
+                            console.log("DB ERROR")
+                            reject(err)
+                        }
+                        let filteredCoordinates = coordinates.map(s => {
+                            let returnObj = {};
+                            returnObj["latitude"]         = s.latitude;
+                            returnObj["longitude"]       = s.longitude; 
+                            return returnObj;
+                        })
+                        resolve(filteredCoordinates)
+                    })
+                })      
+            }
 
 
     return {
         getAllPlanets,
+        getCoordinatesByPlanetId,
     }
 }
 //     const getAllSandwiches = () => {

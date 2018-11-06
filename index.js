@@ -11,7 +11,12 @@ router.get('/planets', (req, res) => {
     service.getAllPlanets().then(resp => {return res.status(200).send(resp)}) 
 })
 
-/
+router.get('/:planetId/coordinates', (req, res) => { 
+    const {planetId} = req.params
+    service.getCoordinatesByPlanetId(planetId).then(resp => {return res.status(200).send(resp)}) 
+})
+
+
 app.use(bodyParser.json());
 app.use('/api', router);
 
