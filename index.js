@@ -1,7 +1,7 @@
 var express = require('express');
 const bodyParser = require('body-parser');
 const router = express.Router();
-const port = 9000;
+const port = process.env.PORT || 9000;
 var app = express()
 
 var service = require('./data_service/planetService.js')
