@@ -1,75 +1,63 @@
+const EventEmitter = require('events');
 const { Planet } = require('./data/db.js')
 const { Coordinate } = require('./data/db.js')
 
 
-
-const PlanetService = () => {
-
-    const getAllPlanets = () => {
-
-        return new Promise((resolve, reject) => {
-            Planet.find({}, (err, planets) => {
-                if(err) {
-                    console.log("DB ERROR")
-                    reject(err)
-                }
-                let filteredPlanets = planets.map(s => {
-                    let returnObj = {};
-                    returnObj["id"]         = s.id;
-                    returnObj["name"]       = s.name;
-                    returnObj["diameter"]  = s.diameter;
-                    returnObj["color"]      = s.color;
-                
-                    return returnObj;
-                })
-                resolve(filteredPlanets)
-            })
-        })              
+class PlanetService extends EventEmitter  {
+    constructor() {
+        super();
+        this.events = {
+            GET_ALL_PLANETS: 'GET_ALL_PLANTES',
+            GET_ALL_PLANTES_ID: 'GET_ALL_PLANTES_ID',
+            CREATE_COORDINATES: 'CREATE_COORDINATES'
+        }
     }
-    const getCoordinatesByPlanetId = (id) => {
 
+    getAllPlanets() {
+        Planet.find({}, (err, planets) => {
+            if (!planets) { this.emit('error', { statusCode: 404, message: 'Not found' }); }
+            else if (err) { this.emit('error', { statusCode: 500, message: err }); }
+            else { this.emit(this.events.GET_ALL_PLANETS, planets); }
+        });
+    };
+    
+    getCoordinatesByPlanetId(id) {
+        Coordinate.findById(id, (err, data) => {
+            if (!data) { this.emit('error', { statusCode: 404, message: 'Not found' }); }
+            else if (err) { this.emit('error', { statusCode: 500, message: err }); } 
+            else { this.emit(this.events.GET_ALL_PLANTES_ID, data); }
+        })
+    }
+    
+    addCoordinates(Coordinate) {
+        Coordinate.findById(Coordinate.planedId, (err, data) => {
+            if (!data) { this.emit('error', { statusCode:400, message: 'Planet does not exist' }); }
+            else if (err) { this.emit('error', { statusCode: 500, message: err }); }
+            else {
+                Coordinate.create()
+            }
+        })
+    }
+
+        /*addCoordinates = (id, body) => {
         return new Promise((resolve, reject) => {
-
             Coordinate.find({ planetId: id }, (err, coordinates) => {
-                if(err) {
-                    console.log("DB ERROR")
-                    reject(err)
+                if (!coordinates) {
+                    this.emit('error', { statusCode: 400, message: 'Planet doesn' })
+                }
+                console.log(body);
+                let input = {
+                    planetId: id,
+                    latitude: body.latitude,
+                    longitude: body.longitude
                 }
                 
-                let filteredCoordinates = coordinates.map(s => {
-                    let returnObj = {};
-                    returnObj["latitude"]         = s.latitude;
-                    returnObj["longitude"]       = s.longitude; 
-                    return returnObj;
-                })
-                resolve(filteredCoordinates)
+                console.log(input);
+                Coordinate.create(input);
             })
-        })      
-    }
-     
-    return {
-        getAllPlanets,
-        getCoordinatesByPlanetId,
-    }
+        })
+    };*/
+    
 }
 
-//     const postComment = (body) => {
-
-//         return new Promise((resolve, reject) => {
-
-//             Sandwich.findOneAndUpdate({ "id": body.id }, 
-//             { $push: { comments: { "name": body.name, "text": body.text } } },
-//             (err, found)  => {
-
-//                 if(err) {
-//                     console.log("DB ERR");
-//                      reject(err)
-//                 }
-//                 resolve(body)
-//             })
-                   
-//         })        
-//     }
-
-
-module.exports = PlanetService()
+module.exports = PlanetService;
