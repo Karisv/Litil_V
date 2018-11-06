@@ -46,7 +46,7 @@ const PlanetService = () => {
             })
         })      
     }
-        
+     
     return {
         getAllPlanets,
         getCoordinatesByPlanetId,
@@ -71,12 +71,5 @@ const PlanetService = () => {
 //         })        
 //     }
 
-
-//     return {
-//         getAllSandwiches,
-//         getSandwichById,
-//         postComment
-//     }
-// }
 
 module.exports = PlanetService()
