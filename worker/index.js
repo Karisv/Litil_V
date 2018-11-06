@@ -19,15 +19,13 @@ function post(lat, long, url) {
     );
 }
 
-function randomLat() // min and max included
-{
+function randomLat() {
     const min = -90;
     const max = 90
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-function randomLong() // min and max included
-{
+function randomLong() {
     const min = -180;
     const max = 180
     return Math.floor(Math.random() * (max - min + 1) + min);
