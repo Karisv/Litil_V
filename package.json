@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node ./index.js",
     "build": "nodemon -e js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "heroku-postbuild": "yarn --prefix worker run installDep"
   },
   "keywords": [],
   "author": "",
